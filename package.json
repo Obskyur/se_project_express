@@ -4,8 +4,8 @@
   "description": "The back-end project is focused on creating a server for the WTWR application. You’ll gain a deeper understanding of how to work with databases, set up security and testing, and deploy web applications on a remote machine. The eventual goal is to create a server with an API and user authorization.\r ## Running the Project\r `npm run start` — to launch the server",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./src/app.js",
-    "start": "node ./src/app.js",
+    "dev": "nodemon app.js",
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx eslint ."
   },
