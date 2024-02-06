@@ -1,8 +1,8 @@
-// Imports:
+//* Imports:
 const validator = require('validator');
 const { Schema, model } = require('mongoose');
 
-// Constants:
+//* Constants:
 const clothingItemSchema = new Schema({
   name: {
     type: String,
@@ -40,4 +40,5 @@ const clothingItemSchema = new Schema({
   }
 })
 
+//* Exports:
 module.exports = model("clothingItem", clothingItemSchema);
