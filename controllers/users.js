@@ -1,7 +1,7 @@
 //* Imports:
 const User = require("../models/user");
 
-//* Methods:
+//* Methods (Controllers):
 
 // Used to retrieve all users from database
 const getUsers = (req, res) => {
