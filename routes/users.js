@@ -1,7 +1,7 @@
 // Imports:
 const router = require('express').Router();
 
-// Methods:
+// User routes:
 router.get('/', () => { });
 router.get('/:userId', () => { });
 router.post('/', () => { });
