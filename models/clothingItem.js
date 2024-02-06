@@ -30,7 +30,6 @@ const clothingItemSchema = new Schema({
   },
   likes: {
     type: Schema.Types.ObjectId,
-    required: [true, "The likes field is required."],
     ref: 'user'
   },
   createdAt: {
