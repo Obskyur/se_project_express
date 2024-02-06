@@ -1,10 +1,11 @@
-// Imports:
+//* Imports:
 const router = require('express').Router();
+const { getUsers, getUser, addUser } = require("../controllers/users");
 
-// User routes:
-router.get('/', () => { });
-router.get('/:userId', () => { });
-router.post('/', () => { });
+//* User routes:
+router.get('/', getUsers);
+router.get('/:userId', getUser);
+router.post('/', addUser);
 
-// Exports:
+//* Exports:
 module.exports = router;
