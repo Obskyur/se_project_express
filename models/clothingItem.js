@@ -19,10 +19,8 @@ const clothingItemSchema = new Schema({
     type: String,
     required: [true, "The imageUrl field is required."],
     validate: {
-      validator(value) {
-        return validator.isURL(value);
-      },
-      message: "You must enter a valid URL.",
+      validator: value => validator.isURL(value),
+      message: "URL given is invalid.",
     }
   },
   owner: {
