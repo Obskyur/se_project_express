@@ -18,7 +18,7 @@ const getUsers = (req, res) => {
 // Used to retrieve user at specified path from database
 const getUser = (req, res) => {
   const { userId } = req.params;
-  User.find({_id: userId})
+  User.findById(userId)
     .then(users =>
       res.status(200).send(users)
     )
