@@ -46,6 +46,11 @@
 <!-- To-Do's -->
 <div align="center"><h2 id="wip"> ⏹️ To-Do's </h2></div>
 <ul>
+<li> [x] Initialize Tools / Technologies </li>
+<li> [x] Create Routing </li>
+<li> [x] Add Models / Schemas </li>
+<li> [x] Enable request validation </li>
+<li> [x] Handle request errors </li>
 <li> [ ] Server Authentication and Authorization </li>
 <li> [ ] Implement RegEx queries </li>
 </ul>
