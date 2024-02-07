@@ -1,0 +1,13 @@
+//* Error Status Codes:
+const DOCUMENT_NOT_FOUND_ERROR = 404;
+const CAST_ERROR = 404;
+const INTERNAL_SERVER_ERROR = 500;
+const VALIDATION_ERROR = 400
+
+//* Exports:
+module.exports = {
+  DOCUMENT_NOT_FOUND_ERROR,
+  CAST_ERROR,
+  INTERNAL_SERVER_ERROR,
+  VALIDATION_ERROR
+};
