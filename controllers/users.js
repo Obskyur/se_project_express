@@ -29,11 +29,11 @@ const getUser = (req, res) => {
     .then((users) => res.status(200).send(users))
     .catch((err) => {
       console.error(err);
-      if (err.name == "DocumentNotFoundError")
+      if (err.name === "DocumentNotFoundError")
         return res
           .status(DOCUMENT_NOT_FOUND_ERROR)
           .send({ message: "User ID not found." });
-      else if (err.name == "CastError")
+      if (err.name === "CastError")
         return res.status(CAST_ERROR).send({ message: "Invalid User ID." });
       return res
         .status(INTERNAL_SERVER_ERROR)
@@ -48,7 +48,7 @@ const addUser = (req, res) => {
     .then((user) => res.status(201).send(user))
     .catch((err) => {
       console.error(err);
-      if (err.name == "ValidationError")
+      if (err.name === "ValidationError")
         return res
           .status(VALIDATION_ERROR)
           .send({ message: "User has invalid name or avatar." });

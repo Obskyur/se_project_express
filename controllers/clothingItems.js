@@ -28,7 +28,7 @@ const addItem = (req, res) => {
     .then((item) => res.status(201).send(item))
     .catch((err) => {
       console.error(err);
-      if (err.name == "ValidationError")
+      if (err.name === "ValidationError")
         return res
           .status(VALIDATION_ERROR)
           .send({ message: "Item has invalid name, weather, or imageUrl." });
@@ -46,11 +46,11 @@ const deleteItem = (req, res) => {
     .then((item) => res.status(200).send(item))
     .catch((err) => {
       console.error(err);
-      if (err.name == "DocumentNotFoundError")
+      if (err.name === "DocumentNotFoundError")
         return res
           .status(DOCUMENT_NOT_FOUND_ERROR)
           .send({ message: "Item ID not found." });
-      else if (err.name == "CastError")
+      if (err.name === "CastError")
         return res.status(CAST_ERROR).send({ message: "Invalid Item ID." });
       return res
         .status(INTERNAL_SERVER_ERROR)
@@ -70,11 +70,11 @@ const addLike = (req, res) => {
     .then((item) => res.status(200).send(item))
     .catch((err) => {
       console.error(err);
-      if (err.name == "DocumentNotFoundError")
+      if (err.name === "DocumentNotFoundError")
         return res
           .status(DOCUMENT_NOT_FOUND_ERROR)
           .send({ message: "Item ID not found." });
-      else if (err.name == "CastError")
+      if (err.name === "CastError")
         return res.status(CAST_ERROR).send({ message: "Invalid Item ID." });
       return res
         .status(INTERNAL_SERVER_ERROR)
@@ -94,11 +94,11 @@ const deleteLike = (req, res) => {
     .then((item) => res.status(200).send(item))
     .catch((err) => {
       console.error(err);
-      if (err.name == "DocumentNotFoundError")
+      if (err.name === "DocumentNotFoundError")
         return res
           .status(DOCUMENT_NOT_FOUND_ERROR)
           .send({ message: "Item ID not found." });
-      else if (err.name == "CastError")
+      if (err.name === "CastError")
         return res.status(CAST_ERROR).send({ message: "Invalid Item ID." });
       return res
         .status(INTERNAL_SERVER_ERROR)
