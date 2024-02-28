@@ -6,6 +6,7 @@ const {
   INTERNAL_SERVER_ERROR,
   VALIDATION_ERROR,
 } = require("../utils/errors");
+const bcrypt = require('bcrypt');
 
 //* Methods (Controllers):
 
@@ -43,19 +44,25 @@ const getUser = (req, res) => {
 
 // Used to add a new user to the database
 const addUser = (req, res) => {
-  const { name, avatar } = req.body;
-  User.create({ name, avatar })
-    .then((user) => res.status(201).send(user))
-    .catch((err) => {
-      console.error(err);
-      if (err.name === "ValidationError")
+  const { name, avatar, email, password } = req.body;
+
+  bcrypt.hash(password, 10)
+    .then(hash => User.create({ name, avatar, email, password: hash })
+      .then((user) => res.status(201).send(user))
+      .catch((err) => {
+        console.error(err);
+        if (err.name === "ValidationError")
+          return res
+            .status(VALIDATION_ERROR)
+            .send({ message: "User has invalid name, avatar, email, or password." });
+        if (err.status === MONGO_DB_DUPLICATE_ERROR)
+          return res
+            .status(MONGO_DB_DUPLICATE_ERROR)
+            .send({ message: "A user with this e-mail already exists!" });
         return res
-          .status(VALIDATION_ERROR)
-          .send({ message: "User has invalid name or avatar." });
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." });
-    });
+          .status(INTERNAL_SERVER_ERROR)
+          .send({ message: "An error has occurred on the server." });
+      }));
 };
 
 //* Exports:
