@@ -1,12 +1,13 @@
 //* Imports:
 const router = require("express").Router();
+const clothingItemsRouter = require("./clothingItems");
+const { authorize } = require('../middleware/auth');
 // const userRouter = require("./users");
 const { getUser, addUser, login } = require("../controllers/users");
-const clothingItemsRouter = require("./clothingItems");
 const { PATH_NOT_FOUND_ERROR } = require('../utils/errors');
 
 //* Re-routing:
-router.use("/:id", getUser);
+router.use("/:id", authorize, getUser);
 router.use("/signin", login);
 router.use("/signup", addUser);
 router.use("/items", clothingItemsRouter);
