@@ -15,7 +15,23 @@ const userSchema = new Schema({
     required: [true, "The avatar field is required."],
     validate: {
       validator: value => validator.isURL(value),
-      message: "URL given is invalid.",
+      message: "URL provided is invalid.",
+    }
+  },
+  email: {
+    type: String,
+    required: [true, "An E-mail address is required."],
+    validate: {
+      validator: value => validator.email(value),
+      message: "E-mail address provided is invalid.",
+    }
+  },
+  password: {
+    type: String,
+    required: [true, "A password is required."],
+    validate: {
+      validator: value => validator.password(value),
+      message: "Password provided is invalid.",
     }
   }
 })
