@@ -58,6 +58,19 @@ const getUsers = (req, res) => {
     });
 };
 
+// Used to retrieve the logged-in user data
+const getCurrentUser = (req, res) => {
+  User.findById(req.user._id)
+    .orFail()
+    .then((user) => res.status(200).send(user))
+    .catch((err) => {
+      console.error(err);
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
+    });
+};
+
 // Used to retrieve user at specified path from database
 const getUser = (req, res) => {
   const { userId } = req.params;
@@ -110,6 +123,7 @@ const login = (req, res) => {
 module.exports = {
   getUsers,
   getUser,
+  getCurrentUser,
   addUser,
   login,
 };
