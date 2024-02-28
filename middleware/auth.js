@@ -4,7 +4,7 @@ const { JWT_SECRET } = require("../utils/config");
 const { AUTH_NOT_FOUND_ERROR } = require("../utils/errors");
 
 /* eslint-disable consistent-return */
-module.exports = (req, res, next) => {
+module.exports.authorize = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith("Bearer"))
     return res.status(AUTH_NOT_FOUND_ERROR).send({ message: "Authorization required." });
