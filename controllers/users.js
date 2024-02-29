@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 //* Imports:
 const bcrypt = require("bcryptjs");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const { JWT_SECRET } = require('../utils/config');
+const { JWT_SECRET } = require("../utils/config");
 const {
   DOCUMENT_NOT_FOUND_ERROR,
   CAST_ERROR,
@@ -31,7 +31,7 @@ const addUser = (req, res) => {
         console.error(err);
         if (err.name === "ValidationError") {
           return res.status(VALIDATION_ERROR).send({
-            message: "User has invalid name, avatar, email, or password.",
+            message: err.message,
           });
         }
         if (err.status === MONGO_DB_DUPLICATE_ERROR) {
@@ -102,14 +102,16 @@ const findUserByCredentials = (email, encPassword) => {
       return user;
     });
   });
-}
+};
 
 const login = (req, res) => {
   const { email, password } = req.params;
   return bcrypt.hash(password, 10).then((hash) =>
     findUserByCredentials(email, hash)
       .then((user) => {
-        const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "7d", });
+        const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+          expiresIn: "7d",
+        });
         res.send({ token });
       })
       .catch((err) => {

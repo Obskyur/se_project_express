@@ -21,8 +21,9 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: [true, 'An E-mail address is required.'],
+    unique: true,
     validate: {
-      validator: (value) => validator.email(value),
+      validator: (value) => validator.isEmail(value),
       message: 'E-mail address provided is invalid.',
     },
   },
@@ -30,7 +31,7 @@ const userSchema = new Schema({
     type: String,
     required: [true, 'A password is required.'],
     validate: {
-      validator: (value) => validator.password(value),
+      validator: (value) => validator.isStrongPassword(value),
       message: 'Password provided is invalid.',
     },
   },

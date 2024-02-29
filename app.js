@@ -25,6 +25,4 @@ app.listen(PORT, () => {
 
 //* Handle requests:
 app.use(express.json());
-app.use("/", addFakeUser, mainRouter);
-
-
+app.use("/", mainRouter);
