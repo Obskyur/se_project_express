@@ -42,7 +42,7 @@ const addUser = (req, res) => {
         if (err.code === MONGO_SERVER_ERROR) {
           return res
             .status(MONGO_DB_DUPLICATE_ERROR)
-            .send({ message: err.error.validate.message });
+            .send({ message: "A user with this e-mail already exists!" });
         }
         return res
           .status(INTERNAL_SERVER_ERROR)
