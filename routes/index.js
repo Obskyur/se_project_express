@@ -1,7 +1,7 @@
 //* Imports:
 const router = require("express").Router();
 const clothingItemsRouter = require("./clothingItems");
-const { authorize } = require('../middleware/auth');
+const { authorize } = require('../middlewares/auth');
 // const userRouter = require("./users");
 const { getUser, getCurrentUser, addUser, login } = require("../controllers/users");
 const { PATH_NOT_FOUND_ERROR } = require('../utils/errors');

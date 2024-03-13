@@ -10,6 +10,7 @@ const {
   INTERNAL_SERVER_ERROR,
   VALIDATION_ERROR,
   MONGO_DB_DUPLICATE_ERROR,
+  MONGO_SERVER_ERROR,
   USER_NOT_FOUND_ERROR,
 } = require("../utils/errors");
 
@@ -26,7 +27,11 @@ const addUser = (req, res) => {
       email,
       password: hash,
     })
-      .then((user) => res.status(201).send(user))
+      .then((user) =>
+        res
+          .status(201)
+          .send({ name: user.name, avatar: user.avatar, email: user.email }),
+      )
       .catch((err) => {
         console.error(err);
         if (err.name === "ValidationError") {
@@ -34,10 +39,10 @@ const addUser = (req, res) => {
             message: err.message,
           });
         }
-        if (err.status === MONGO_DB_DUPLICATE_ERROR) {
+        if (err.code === MONGO_SERVER_ERROR) {
           return res
             .status(MONGO_DB_DUPLICATE_ERROR)
-            .send({ message: "A user with this e-mail already exists!" });
+            .send({ message: err.error.validate.message });
         }
         return res
           .status(INTERNAL_SERVER_ERROR)
