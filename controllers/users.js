@@ -81,7 +81,7 @@ const getUser = (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
     .orFail()
-    .then((users) => res.status(200).send(users))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
@@ -126,6 +126,32 @@ const login = (req, res) => {
   );
 };
 
+const updateCurrentUser = (req, res) => {
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name: req.user.name, avatar: req.user.avatar },
+    { new: true, runValidators: true },
+  )
+    .orFail()
+    .then((updatedUser) => res.status(200).send(updatedUser))
+    .catch((err) => {
+      console.error(err);
+      if (err.name === "DocumentNotFoundError") {
+        return res
+          .status(DOCUMENT_NOT_FOUND_ERROR)
+          .send({ message: "User ID not found." });
+      }
+      if (err.name === "ValidationError") {
+        return res.status(VALIDATION_ERROR).send({
+          message: err.message,
+        });
+      }
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
+    });
+};
+
 //* Exports:
 module.exports = {
   getUsers,
@@ -133,4 +159,5 @@ module.exports = {
   getCurrentUser,
   addUser,
   login,
+  updateCurrentUser,
 };
