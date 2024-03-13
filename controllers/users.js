@@ -98,19 +98,21 @@ const getUser = (req, res) => {
     });
 };
 
-const findUserByCredentials = (email, encPassword) => {
+const findUserByCredentials = new Promise((email, encPassword) => {
   User.findOne({ email }).then((user) => {
-    if (!user) return Promise.reject(new Error("User not found."));
+    if (!user) {
+      return Promise.reject(new Error("User not found."));
+    }
     return bcrypt.compare(encPassword, user.password).then((match) => {
       if (!match)
         return Promise.reject(new Error("Incorrect E-mail or Password."));
       return user;
     });
   });
-};
+});
 
 const login = (req, res) => {
-  const { email, password } = req.params;
+  const { email, password } = req.body;
   return bcrypt.hash(password, 10).then((hash) =>
     findUserByCredentials(email, hash)
       .then((user) => {
@@ -121,7 +123,7 @@ const login = (req, res) => {
       })
       .catch((err) => {
         console.error(err);
-        res.status(USER_NOT_FOUND_ERROR).send("User not found.");
+        res.status(USER_NOT_FOUND_ERROR).send({ message: "User not found." });
       }),
   );
 };
@@ -132,7 +134,6 @@ const updateCurrentUser = (req, res) => {
     { name: req.user.name, avatar: req.user.avatar },
     { new: true, runValidators: true },
   )
-    .orFail()
     .then((updatedUser) => res.status(200).send(updatedUser))
     .catch((err) => {
       console.error(err);
