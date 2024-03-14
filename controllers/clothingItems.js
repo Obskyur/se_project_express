@@ -5,6 +5,7 @@ const {
   CAST_ERROR,
   INTERNAL_SERVER_ERROR,
   VALIDATION_ERROR,
+  REQ_FORBIDDEN
 } = require("../utils/errors");
 
 //* Methods (Controllers):
@@ -41,6 +42,23 @@ const addItem = (req, res) => {
 // Used to remove a clothing item from the database
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
+  ClothingItem.findById(itemId)
+    .orFail()
+    .then((item) => {
+      if (item.owner !== req.body.user._id) {
+        res.status(REQ_FORBIDDEN).send({ message: "User does not have ownership of this card." });
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      if (err.name === "DocumentNotFoundError")
+        return res
+          .status(DOCUMENT_NOT_FOUND_ERROR)
+          .send({ message: "Item ID not found." });
+      return res
+        .status(INTERNAL_SERVER_ERROR)
+        .send({ message: "An error has occurred on the server." });
+    })
   ClothingItem.findByIdAndDelete(itemId)
     .orFail()
     .then((item) => res.status(200).send(item))

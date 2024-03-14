@@ -30,6 +30,7 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: [true, 'A password is required.'],
+    select: false,
     validate: {
       validator: (value) => validator.isStrongPassword(value),
       message: 'Password provided is invalid.',

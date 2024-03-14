@@ -98,8 +98,9 @@ const getUser = (req, res) => {
     });
 };
 
-const findUserByCredentials = new Promise((email, encPassword) => {
-  User.findOne({ email }).then((user) => {
+const findUserByCredentials = (email, encPassword) => {
+  User.findOne({ email }).select('+password')
+    .then((user) => {
     if (!user) {
       return Promise.reject(new Error("User not found."));
     }
@@ -109,7 +110,7 @@ const findUserByCredentials = new Promise((email, encPassword) => {
       return user;
     });
   });
-});
+};
 
 const login = (req, res) => {
   const { email, password } = req.body;
@@ -123,7 +124,7 @@ const login = (req, res) => {
       })
       .catch((err) => {
         console.error(err);
-        res.status(USER_NOT_FOUND_ERROR).send({ message: "User not found." });
+        res.status(USER_NOT_FOUND_ERROR).send({ message: "Incorrect email or password." });
       }),
   );
 };
