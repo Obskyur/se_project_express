@@ -51,8 +51,10 @@
 <li> [x] <s>Add Models / Schemas</s></li>
 <li> [x] <s>Enable request validation</s></li>
 <li> [x] <s>Handle request errors</s></li>
-<li> [ ] Server Authentication and Authorization </li>
-<li> [ ] Implement RegEx queries </li>
+<li> [x] <s>Server Authentication and Authorization</s> </li>
+<li> [ ] Implement RegEx queries?? </li>
+<li> [ ] Configure Front-End Authorization </li>
+<li> [ ] Connect Front-End to Server </li>
 </ul>
 
 
