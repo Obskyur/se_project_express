@@ -40,7 +40,7 @@ const addItem = (req, res) => {
 };
 
 // Used to remove a clothing item from the database
-const deleteItem = (req, res) => {
+const deleteItem = (req, res, next) => {
   const { itemId } = req.params;
   ClothingItem.findById(itemId)
     .orFail()

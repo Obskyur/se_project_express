@@ -98,8 +98,8 @@ const getUser = (req, res) => {
     });
 };
 
-const findUserByCredentials = (email, password) => {
-  return User.findOne({ email })
+const findUserByCredentials = (email, password) =>
+  User.findOne({ email })
     .select("+password")
     .then((user) => {
       if (!user) {
@@ -111,7 +111,6 @@ const findUserByCredentials = (email, password) => {
         return user;
       });
     });
-};
 
 const login = (req, res) => {
   const { email, password } = req.body;
