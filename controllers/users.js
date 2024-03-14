@@ -22,7 +22,7 @@ const addUser = (req, res) => {
 
   bcrypt.hash(password, 10).then((hash) =>
     User.create({
-      name: name,
+      name,
       avatar,
       email,
       password: hash,
