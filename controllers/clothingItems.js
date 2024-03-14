@@ -1,11 +1,12 @@
 //* Imports:
+const { json } = require("express");
 const ClothingItem = require("../models/clothingItem");
 const {
   DOCUMENT_NOT_FOUND_ERROR,
   CAST_ERROR,
   INTERNAL_SERVER_ERROR,
   VALIDATION_ERROR,
-  REQ_FORBIDDEN
+  REQ_FORBIDDEN,
 } = require("../utils/errors");
 
 //* Methods (Controllers):
@@ -45,23 +46,15 @@ const deleteItem = (req, res) => {
   ClothingItem.findById(itemId)
     .orFail()
     .then((item) => {
-      if (item.owner !== req.body.user._id) {
-        res.status(REQ_FORBIDDEN).send({ message: "User does not have ownership of this card." });
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      if (err.name === "DocumentNotFoundError")
+      if (!item.owner.equals(req.user._id)) {
         return res
-          .status(DOCUMENT_NOT_FOUND_ERROR)
-          .send({ message: "Item ID not found." });
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." });
+          .status(REQ_FORBIDDEN)
+          .send({ message: "User does not have ownership of this card." });
+      }
+      return ClothingItem.findByIdAndDelete(itemId)
+        .orFail()
+        .then((item) => res.status(200).send(item));
     })
-  ClothingItem.findByIdAndDelete(itemId)
-    .orFail()
-    .then((item) => res.status(200).send(item))
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError")
