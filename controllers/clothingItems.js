@@ -1,5 +1,4 @@
 //* Imports:
-const { json } = require("express");
 const ClothingItem = require("../models/clothingItem");
 const {
   DOCUMENT_NOT_FOUND_ERROR,
@@ -53,7 +52,7 @@ const deleteItem = (req, res) => {
       }
       return ClothingItem.findByIdAndDelete(itemId)
         .orFail()
-        .then((item) => res.status(200).send(item));
+        .then(() => res.status(200).send(item));
     })
     .catch((err) => {
       console.error(err);
