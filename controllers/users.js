@@ -98,13 +98,13 @@ const getUser = (req, res) => {
     });
 };
 
-const findUserByCredentials = (email, encPassword) => {
-  User.findOne({ email }).select('+password')
+const findUserByCredentials = (email, password) => {
+  return User.findOne({ email }).select('+password')
     .then((user) => {
     if (!user) {
       return Promise.reject(new Error("User not found."));
     }
-    return bcrypt.compare(encPassword, user.password).then((match) => {
+    return bcrypt.compare(password, user.password).then((match) => {
       if (!match)
         return Promise.reject(new Error("Incorrect E-mail or Password."));
       return user;
@@ -114,19 +114,20 @@ const findUserByCredentials = (email, encPassword) => {
 
 const login = (req, res) => {
   const { email, password } = req.body;
-  return bcrypt.hash(password, 10).then((hash) =>
-    findUserByCredentials(email, hash)
-      .then((user) => {
-        const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
-          expiresIn: "7d",
-        });
-        res.send({ token });
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(USER_NOT_FOUND_ERROR).send({ message: "Incorrect email or password." });
-      }),
-  );
+  if (!email || !password) {
+    return res.status(USER_NOT_FOUND_ERROR).send({ message: "E-mail or password not found." });
+  }
+  return findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+        expiresIn: "7d",
+      });
+      res.send({ token });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(USER_NOT_FOUND_ERROR).send({ message: "Incorrect email or password." });
+    });
 };
 
 const updateCurrentUser = (req, res) => {
