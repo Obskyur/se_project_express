@@ -22,7 +22,7 @@ const addUser = (req, res) => {
 
   bcrypt.hash(password, 10).then((hash) =>
     User.create({
-      name,
+      name: name,
       avatar,
       email,
       password: hash,
@@ -99,23 +99,26 @@ const getUser = (req, res) => {
 };
 
 const findUserByCredentials = (email, password) => {
-  return User.findOne({ email }).select('+password')
+  return User.findOne({ email })
+    .select("+password")
     .then((user) => {
-    if (!user) {
-      return Promise.reject(new Error("User not found."));
-    }
-    return bcrypt.compare(password, user.password).then((match) => {
-      if (!match)
-        return Promise.reject(new Error("Incorrect E-mail or Password."));
-      return user;
+      if (!user) {
+        return Promise.reject(new Error("User not found."));
+      }
+      return bcrypt.compare(password, user.password).then((match) => {
+        if (!match)
+          return Promise.reject(new Error("Incorrect E-mail or Password."));
+        return user;
+      });
     });
-  });
 };
 
 const login = (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(USER_NOT_FOUND_ERROR).send({ message: "E-mail or password not found." });
+    return res
+      .status(USER_NOT_FOUND_ERROR)
+      .send({ message: "E-mail or password not found." });
   }
   return findUserByCredentials(email, password)
     .then((user) => {
@@ -126,17 +129,21 @@ const login = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      res.status(USER_NOT_FOUND_ERROR).send({ message: "Incorrect email or password." });
+      res
+        .status(USER_NOT_FOUND_ERROR)
+        .send({ message: "Incorrect email or password." });
     });
 };
 
 const updateCurrentUser = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
-    { name: req.user.name, avatar: req.user.avatar },
+    { name: req.body.name, avatar: req.body.avatar },
     { new: true, runValidators: true },
   )
-    .then((updatedUser) => res.status(200).send(updatedUser))
+    .then((updatedUser) => {
+      res.status(200).send(updatedUser);
+    })
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
