@@ -24,7 +24,6 @@ const getItems = (req, res) => {
 
 // Used to add a new clothing item to the database
 const addItem = (req, res) => {
-  console.log(req);
   const { name, weather, imageUrl } = req.body;
   ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
     .then((item) => res.status(201).send(item))

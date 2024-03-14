@@ -14,10 +14,10 @@ const { PATH_NOT_FOUND_ERROR } = require("../utils/errors");
 //* Re-routing:
 router.post("/signin", login);
 router.post("/signup", addUser);
-router.get("/:id", authorize, getUser);
 router.get("/users/me", authorize, getCurrentUser);
 router.patch("/users/me", authorize, updateCurrentUser);
-router.use("/items", authorize, clothingItemsRouter);
+router.use("/items", clothingItemsRouter);
+router.get("/:id", authorize, getUser);
 router.use((req, res) =>
   res
     .status(PATH_NOT_FOUND_ERROR)
