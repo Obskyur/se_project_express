@@ -116,8 +116,8 @@ const login = (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return res
-      .status(USER_NOT_FOUND_ERROR)
-      .send({ message: "E-mail or password not found." });
+      .status(VALIDATION_ERROR)
+      .send({ message: "E-mail and password are required." });
   }
   return findUserByCredentials(email, password)
     .then((user) => {
