@@ -10,9 +10,9 @@ const userSchema = new Schema({
     minlength: 2,
     maxlength: 30,
   },
-  avatar: {
+  avatarUrl: {
     type: String,
-    required: [true, 'The avatar field is required.'],
+    required: [true, 'The avatar URL field is required.'],
     validate: {
       validator: (value) => validator.isURL(value),
       message: 'URL provided is invalid.',

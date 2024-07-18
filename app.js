@@ -19,6 +19,6 @@ app.listen(PORT, () => {
 });
 
 //* Handle requests:
+app.use(cors());
 app.use(express.json());
 app.use("/", mainRouter);
-app.use(cors());

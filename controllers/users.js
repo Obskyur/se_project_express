@@ -17,19 +17,21 @@ const {
 
 // Used to add a new user to the database
 const addUser = (req, res) => {
-  const { name, avatar, email, password } = req.body;
+  const { name, avatarUrl, email, password } = req.body;
+
+  console.log(req.body);
 
   bcrypt.hash(password, 10).then((hash) =>
     User.create({
-      name,
-      avatar,
+      name: name,
+      avatarUrl,
       email,
       password: hash,
     })
       .then((user) =>
         res
           .status(201)
-          .send({ name: user.name, avatar: user.avatar, email: user.email }),
+          .send({ name: user.name, avatarUrl: user.avatarUrl, email: user.email }),
       )
       .catch((err) => {
         console.error(err);
@@ -102,7 +104,7 @@ const login = (req, res) => {
 const updateCurrentUser = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
-    { name: req.body.name, avatar: req.body.avatar },
+    { name: req.body.name, avatarUrl: req.body.avatarUrl },
     { new: true, runValidators: true },
   )
     .then((updatedUser) => {
