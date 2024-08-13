@@ -62,18 +62,6 @@ const getCurrentUser = (req, res, next) => {
     });
 };
 
-// const getCurrentUser = (req, res,) => {
-//   User.findById(req.user._id)
-//     .orFail()
-//     .then((user) => res.status(200).send(user))
-//     .catch((err) => {
-//       console.error(err);
-//       return res
-//         .status(INTERNAL_SERVER_ERROR)
-//         .send({ message: "An error has occurred on the server." });
-//     });
-// };
-
 const findUserByCredentials = (email, password) =>
   User.findOne({ email })
     .select("+password")
