@@ -1,12 +1,12 @@
 //* Imports:
 const ClothingItem = require("../models/clothingItem");
 const {
-  DOCUMENT_NOT_FOUND_ERROR,
-  CAST_ERROR,
-  INTERNAL_SERVER_ERROR,
-  VALIDATION_ERROR,
-  REQ_FORBIDDEN,
+  ValidationError,
+  RequestForbiddenError,
+  NotFoundError,
+  BadRequestError,
 } = require("../utils/errors");
+const errorHandler = require("../middlewares/error-handler");
 
 //* Methods (Controllers):
 
@@ -14,28 +14,20 @@ const {
 const getItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => res.status(200).send(items))
-    .catch((err) => {
-      console.error(err);
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." });
-    });
+    .catch(errorHandler);
 };
 
 // Used to add a new clothing item to the database
-const addItem = (req, res) => {
+const addItem = (req, res, next) => {
   const { name, weather, imageUrl } = req.body;
   ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
     .then((item) => res.status(201).send(item))
     .catch((err) => {
-      console.error(err);
       if (err.name === "ValidationError")
-        return res
-          .status(VALIDATION_ERROR)
-          .send({ message: "Item has invalid name, weather, or imageUrl." });
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." });
+        next(
+          new ValidationError("Item has invalid name, weather, or imageUrl."),
+        );
+      next(err);
     });
 };
 
@@ -46,26 +38,24 @@ const deleteItem = (req, res, next) => {
     .orFail()
     .then((item) => {
       if (!item.owner.equals(req.user._id)) {
-        return res
-          .status(REQ_FORBIDDEN)
-          .send({ message: "User does not have ownership of this card." });
+        next(
+          new RequestForbiddenError(
+            "User does not have ownership of this card.",
+          ),
+        );
       }
       return ClothingItem.findByIdAndDelete(itemId)
         .orFail()
         .then(() => res.status(200).send(item))
-        .catch((err) => {next(err);})
+        .catch(next);
     })
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError")
-        return res
-          .status(DOCUMENT_NOT_FOUND_ERROR)
-          .send({ message: "Item ID not found." });
+        next(new NotFoundError("Item ID not found."));
       if (err.name === "CastError")
-        return res.status(CAST_ERROR).send({ message: "Invalid Item ID." });
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." });
+        next(new BadRequestError("Invalid Item ID."));
+      next(err);
     });
 };
 
@@ -80,16 +70,11 @@ const addLike = (req, res) => {
     .orFail()
     .then((item) => res.status(200).send(item))
     .catch((err) => {
-      console.error(err);
       if (err.name === "DocumentNotFoundError")
-        return res
-          .status(DOCUMENT_NOT_FOUND_ERROR)
-          .send({ message: "Item ID not found." });
+        next(new NotFoundError("Item ID not found."));
       if (err.name === "CastError")
-        return res.status(CAST_ERROR).send({ message: "Invalid Item ID." });
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." });
+        next(new BadRequestError("Invalid Item ID."));
+      next(err);
     });
 };
 
@@ -106,14 +91,10 @@ const deleteLike = (req, res) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError")
-        return res
-          .status(DOCUMENT_NOT_FOUND_ERROR)
-          .send({ message: "Item ID not found." });
+        next(new NotFoundError("Item ID not found."));
       if (err.name === "CastError")
-        return res.status(CAST_ERROR).send({ message: "Invalid Item ID." });
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." });
+        next(new BadRequestError("Invalid Item ID."));
+      next(err);
     });
 };
 

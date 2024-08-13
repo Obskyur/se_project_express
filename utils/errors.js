@@ -18,9 +18,45 @@ class NotFoundError extends Error {
   }
 }
 
+class BadRequestError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "BadRequestError";
+    this.statusCode = 400;
+  }
+}
+
+class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ValidationError";
+    this.statusCode = 400;
+  }
+}
+
+class RequestForbiddenError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "RequestForbiddenError";
+    this.statusCode = 403;
+  }
+}
+
+class DuplicateError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "DuplicateError";
+    this.statusCode = 409;
+  }
+}
+
 //* Exports:
 module.exports = {
+  BadRequestError,
+  DuplicateError,
   NotFoundError,
+  RequestForbiddenError,
+  ValidationError,
   CAST_ERROR,
   VALIDATION_ERROR,
   DOCUMENT_NOT_FOUND_ERROR,

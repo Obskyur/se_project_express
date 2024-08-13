@@ -5,13 +5,12 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
 const {
-  DOCUMENT_NOT_FOUND_ERROR,
-  INTERNAL_SERVER_ERROR,
   VALIDATION_ERROR,
-  MONGO_DB_DUPLICATE_ERROR,
   MONGO_SERVER_ERROR,
-  USER_NOT_FOUND_ERROR,
   NotFoundError,
+  BadRequestError,
+  ValidationError,
+  DuplicateError,
 } = require("../utils/errors");
 
 //* Methods (Controllers):
@@ -28,25 +27,21 @@ const addUser = (req, res) => {
       password: hash,
     })
       .then((user) =>
-        res
-          .status(201)
-          .send({ name: user.name, avatarUrl: user.avatarUrl, email: user.email }),
+        res.status(201).send({
+          name: user.name,
+          avatarUrl: user.avatarUrl,
+          email: user.email,
+        }),
       )
       .catch((err) => {
         console.error(err);
-        if (err.name === "ValidationError") {
-          return res.status(VALIDATION_ERROR).send({
-            message: err.message,
-          });
-        }
-        if (err.code === MONGO_SERVER_ERROR) {
-          return res
-            .status(MONGO_DB_DUPLICATE_ERROR)
-            .send({ message: "A user with this e-mail already exists!" });
-        }
-        return res
-          .status(INTERNAL_SERVER_ERROR)
-          .send({ message: "An error has occurred on the server." });
+        if (err.name === "ValidationError")
+          next(
+            new ValidationError("User has invalid name, email, or password."),
+          );
+        if (err.code === MONGO_SERVER_ERROR)
+          next(new DuplicateError("A user with this e-mail already exists!"));
+        next(err);
       }),
   );
 };
@@ -60,8 +55,12 @@ const getCurrentUser = (req, res, next) => {
       }
       res.status(200).send(user);
     })
-    .catch(next);
-}
+    .catch((err) => {
+      if (err.name === "CastError")
+        next(new BadRequestError("The ID string is in an invalid format."));
+      next(err);
+    });
+};
 
 // const getCurrentUser = (req, res,) => {
 //   User.findById(req.user._id)
@@ -91,11 +90,8 @@ const findUserByCredentials = (email, password) =>
 
 const login = (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    return res
-      .status(VALIDATION_ERROR)
-      .send({ message: "E-mail and password are required." });
-  }
+  if (!email || !password)
+    next(new ValidationError("E-mail and password are required."));
   return findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
@@ -103,11 +99,8 @@ const login = (req, res) => {
       });
       res.send({ token });
     })
-    .catch((err) => {
-      console.error(err);
-      res
-        .status(USER_NOT_FOUND_ERROR)
-        .send({ message: "Incorrect email or password." });
+    .catch(() => {
+      next(new NotFoundError("Incorrect E-mail or Password."));
     });
 };
 
@@ -122,19 +115,11 @@ const updateCurrentUser = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      if (err.name === "DocumentNotFoundError") {
-        return res
-          .status(DOCUMENT_NOT_FOUND_ERROR)
-          .send({ message: "User ID not found." });
-      }
-      if (err.name === "ValidationError") {
-        return res.status(VALIDATION_ERROR).send({
-          message: err.message,
-        });
-      }
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." });
+      if (err.name === "DocumentNotFoundError")
+        next(new NotFoundError("User ID not found."));
+      if (err.name === "ValidationError")
+        next(new ValidationError(err.message));
+      next(err);
     });
 };
 

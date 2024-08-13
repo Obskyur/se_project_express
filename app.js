@@ -3,6 +3,7 @@ const express = require("express");
 const { connect } = require("mongoose");
 const cors = require("cors");
 const mainRouter = require("./routes");
+const errorHandler = require("./middlewares/error-handler");
 
 //* Constants:
 const app = express();
@@ -22,7 +23,4 @@ app.listen(PORT, () => {
 app.use(cors());
 app.use(express.json());
 app.use("/", mainRouter);
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(err.statusCode).send({ message: err.message });
-});
+app.use(errorHandler);
