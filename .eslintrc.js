@@ -22,6 +22,7 @@ module.exports = {
   rules: {
     "no-console": "off",
     "no-underscore-dangle": ["error", { allow: ["_id"] }],
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": false, "optionalDependencies": false, "peerDependencies": false}],
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": false, "optionalDependencies": false, "peerDependencies": false }],
+    "no-unused-vars": ["error", { "argsIgnorePattern": "next" }],
   },
 };
