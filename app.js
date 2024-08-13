@@ -22,3 +22,7 @@ app.listen(PORT, () => {
 app.use(cors());
 app.use(express.json());
 app.use("/", mainRouter);
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.statusCode).send({ message: err.message });
+});

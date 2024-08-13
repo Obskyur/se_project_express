@@ -10,8 +10,17 @@ const MONGO_DB_DUPLICATE_ERROR = 409;
 const INTERNAL_SERVER_ERROR = 500;
 const MONGO_SERVER_ERROR = 11000;
 
+class NotFoundError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "NotFoundError";
+    this.statusCode = 404;
+  }
+}
+
 //* Exports:
 module.exports = {
+  NotFoundError,
   CAST_ERROR,
   VALIDATION_ERROR,
   DOCUMENT_NOT_FOUND_ERROR,

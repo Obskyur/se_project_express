@@ -11,6 +11,7 @@ const {
   MONGO_DB_DUPLICATE_ERROR,
   MONGO_SERVER_ERROR,
   USER_NOT_FOUND_ERROR,
+  NotFoundError,
 } = require("../utils/errors");
 
 //* Methods (Controllers):
@@ -51,24 +52,35 @@ const addUser = (req, res) => {
 };
 
 // Used to retrieve the logged-in user data
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail()
-    .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      console.error(err);
-      return res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: "An error has occurred on the server." });
-    });
-};
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError("User not found.");
+      }
+      res.status(200).send(user);
+    })
+    .catch(next);
+}
+
+// const getCurrentUser = (req, res,) => {
+//   User.findById(req.user._id)
+//     .orFail()
+//     .then((user) => res.status(200).send(user))
+//     .catch((err) => {
+//       console.error(err);
+//       return res
+//         .status(INTERNAL_SERVER_ERROR)
+//         .send({ message: "An error has occurred on the server." });
+//     });
+// };
 
 const findUserByCredentials = (email, password) =>
   User.findOne({ email })
     .select("+password")
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error("User not found."));
+        return Promise.reject(new NotFoundError("User not found."));
       }
       return bcrypt.compare(password, user.password).then((match) => {
         if (!match)
