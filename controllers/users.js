@@ -5,12 +5,11 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
 const {
-  VALIDATION_ERROR,
   MONGO_SERVER_ERROR,
   NotFoundError,
   BadRequestError,
   ValidationError,
-  DuplicateError,
+  ConflictError,
 } = require("../utils/errors");
 
 //* Methods (Controllers):
@@ -40,7 +39,7 @@ const addUser = (req, res) => {
             new ValidationError("User has invalid name, email, or password."),
           );
         if (err.code === MONGO_SERVER_ERROR)
-          next(new DuplicateError("A user with this e-mail already exists!"));
+          next(new ConflictError("A user with this e-mail already exists!"));
         next(err);
       }),
   );

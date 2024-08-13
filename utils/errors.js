@@ -10,13 +10,6 @@ const MONGO_DB_DUPLICATE_ERROR = 409;
 const INTERNAL_SERVER_ERROR = 500;
 const MONGO_SERVER_ERROR = 11000;
 
-class NotFoundError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = "NotFoundError";
-    this.statusCode = 404;
-  }
-}
 
 class BadRequestError extends Error {
   constructor(message) {
@@ -34,15 +27,30 @@ class ValidationError extends Error {
   }
 }
 
-class RequestForbiddenError extends Error {
+class UnauthorizedError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "UnauthorizedError";
+    this.statusCode = 401;
+  }
+}
+
+class ForbiddenError extends Error {
   constructor(message) {
     super(message);
     this.name = "RequestForbiddenError";
     this.statusCode = 403;
   }
 }
+class NotFoundError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "NotFoundError";
+    this.statusCode = 404;
+  }
+}
 
-class DuplicateError extends Error {
+class ConflictError extends Error {
   constructor(message) {
     super(message);
     this.name = "DuplicateError";
@@ -53,9 +61,10 @@ class DuplicateError extends Error {
 //* Exports:
 module.exports = {
   BadRequestError,
-  DuplicateError,
+  ConflictError,
   NotFoundError,
-  RequestForbiddenError,
+  ForbiddenError,
+  UnauthorizedError,
   ValidationError,
   CAST_ERROR,
   VALIDATION_ERROR,

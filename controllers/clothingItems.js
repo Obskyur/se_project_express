@@ -2,7 +2,7 @@
 const ClothingItem = require("../models/clothingItem");
 const {
   ValidationError,
-  RequestForbiddenError,
+  UnauthorizedError,
   NotFoundError,
   BadRequestError,
 } = require("../utils/errors");
@@ -39,7 +39,7 @@ const deleteItem = (req, res, next) => {
     .then((item) => {
       if (!item.owner.equals(req.user._id)) {
         next(
-          new RequestForbiddenError(
+          new UnauthorizedError(
             "User does not have ownership of this card.",
           ),
         );
