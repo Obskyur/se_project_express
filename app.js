@@ -2,8 +2,10 @@
 const express = require("express");
 const { connect } = require("mongoose");
 const cors = require("cors");
+const { errors } = require("celebrate");
+const { requestLogger, errorLogger } = require("./middlewares/logger");
 const mainRouter = require("./routes");
-const errorHandler = require("./middlewares/error-handler");
+const { errorHandler } = require("./middlewares/error-handler");
 
 //* Constants:
 const app = express();
@@ -22,5 +24,14 @@ app.listen(PORT, () => {
 //* Handle requests:
 app.use(cors());
 app.use(express.json());
+
+// Log requests:
+app.use(requestLogger);
+
+// Routes:
 app.use("/", mainRouter);
+
+// Handle errors:
+app.use(errorLogger);
+app.use(errors());
 app.use(errorHandler);
