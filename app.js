@@ -7,6 +7,8 @@ const { requestLogger, errorLogger } = require("./middlewares/logger");
 const mainRouter = require("./routes");
 const { errorHandler } = require("./middlewares/error-handler");
 
+require('dotenv').config();
+
 //* Constants:
 const app = express();
 const { PORT = 3001 } = process.env;
