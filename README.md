@@ -22,14 +22,16 @@
 <ul>
 <li> Representational State-Transfer API's (REST) </li>
 <li> Javascript (JS) </li>
-<li> Node.js and the Node Package Manager (npm) </li>
+<li> Node.js and the Node Package Manager (NPM) </li>
   <ul>
     <li> Express.js </li>
     <li> ESLint </li>
     <li> Prettier </li>
     <li> Nodemon </li>
     <li> MongoDB and the Mongoose library </li>
-    <li> npm validator </li>
+    <li> NPM Validator </li>
+    <li> Winston for request and error logging </li>
+    <li> Joi for request validation prior to reaching controllers </li>
   </ul>
 </ul>
 </p>
@@ -38,6 +40,8 @@
 <div align="center"><h2 id="start">
 💨 Running the Project
 </h2></div>
+
+This server should be running live at <a href="https://www.wtwr.projectdev.net">My WTWR site!</a>
 
 `npm run start` — to launch the server
 
@@ -53,8 +57,8 @@
 <li> [x] <s>Handle request errors</s></li>
 <li> [x] <s>Server Authentication and Authorization</s> </li>
 <li> [ ] Implement RegEx queries?? </li>
-<li> [ ] Configure Front-End Authorization </li>
-<li> [ ] Connect Front-End to Server </li>
+<li> [x] Configure Front-End Authorization </li>
+<li> [x] Connect Front-End to Server </li>
 </ul>
 
 
