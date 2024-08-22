@@ -26,13 +26,7 @@ connect("mongodb://127.0.0.1:27017/wtwr_db")
 }); */
 
 //* Begin listening for requests:
-app.use(
-  cors({
-    origin: "https://wtwr.projectdev.net",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-  }),
-);
+app.use(cors());
 app.listen(PORT, () => {
   console.log(`\nServer running on port ${PORT}.`);
 });
