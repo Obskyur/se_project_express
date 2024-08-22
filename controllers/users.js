@@ -75,7 +75,7 @@ const findUserByCredentials = (email, password) =>
       });
     });
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password)
     next(new ValidationError("E-mail and password are required."));
@@ -86,9 +86,7 @@ const login = (req, res) => {
       });
       res.send({ token });
     })
-    .catch(() => {
-      next(new NotFoundError("Incorrect E-mail or Password."));
-    });
+    .catch(next);
 };
 
 const updateCurrentUser = (req, res) => {
