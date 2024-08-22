@@ -19,12 +19,12 @@ connect("mongodb://127.0.0.1:27017/wtwr_db")
   .catch(console.error);
 
 //* Begin listening for requests:
+app.use(cors());
 app.listen(PORT, () => {
   console.log(`\nServer running on port ${PORT}.`);
 });
 
 //* Handle requests:
-app.use(cors());
 app.use(express.json());
 
 // Log requests:
