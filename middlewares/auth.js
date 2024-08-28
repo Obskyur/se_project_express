@@ -1,7 +1,7 @@
 //* Imports:
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
-const { AUTH_NOT_FOUND_ERROR, UnauthorizedError } = require("../utils/errors");
+const { UnauthorizedError } = require("../utils/errors");
 
 /* eslint-disable consistent-return */
 module.exports.authorize = (req, res, next) => {

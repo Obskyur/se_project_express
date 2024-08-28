@@ -68,3 +68,10 @@ const validateId = celebrate({
     }),
   }),
 });
+
+module.exports = {
+  validateClothingItem,
+  validateUser,
+  validateLogin,
+  validateId,
+};
