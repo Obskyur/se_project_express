@@ -9,6 +9,7 @@ const {
   NotFoundError,
   BadRequestError,
   ValidationError,
+  UnauthorizedError,
   ConflictError,
 } = require("../utils/errors");
 
@@ -66,11 +67,11 @@ const findUserByCredentials = (email, password) =>
     .select("+password")
     .then((user) => {
       if (!user) {
-        return Promise.reject(new NotFoundError("User not found."));
+        return Promise.reject(new UnauthorizedError("User not found."));
       }
       return bcrypt.compare(password, user.password).then((match) => {
         if (!match)
-          return Promise.reject(new Error("Incorrect E-mail or Password."));
+          return Promise.reject(new UnauthorizedError("Incorrect E-mail or Password."));
         return user;
       });
     });
