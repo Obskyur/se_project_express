@@ -15,6 +15,10 @@ const validateClothingItem = celebrate({
       "string.min": 'The minimum length of the "name" field is 2',
       "string.max": 'The maximum length of the "name" field is 30',
     }),
+    weather: Joi.string().required().valid("hot", "cold", "rainy").messages({
+      "string.empty": "The weather field is required.",
+      "string.uri": "Weather given is invalid.",
+    }),
     imageUrl: Joi.string().required().custom(validateUrl).messages({
       "string.empty": "The imageUrl field is required.",
       "string.uri": "URL given is invalid.",
@@ -61,11 +65,6 @@ const validateId = celebrate({
       "string.empty": "The id field is required.",
       "string.hex": "The id field must be a hexadecimal value.",
       "string.length": "The id field must be 24 characters long.",
-    }),
-    owner: Joi.string().hex().length(24).required().messages({
-      "string.empty": "The owner field is required.",
-      "string.hex": "The owner field must be a hexadecimal value.",
-      "string.length": "The owner field must be 24 characters long.",
     }),
   }),
 });
