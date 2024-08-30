@@ -37,11 +37,11 @@ const addUser = (req, res, next) => {
       .catch((err) => {
         console.error(err);
         if (err.name === "ValidationError")
-          next(
+          return next(
             new ValidationError("User has invalid name, email, or password."),
           );
         if (err.code === MONGO_SERVER_ERROR)
-          next(new ConflictError("A user with this e-mail already exists!"));
+          return next(new ConflictError("A user with this e-mail already exists!"));
         next(err);
       }),
   );
@@ -58,7 +58,7 @@ const getCurrentUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === "CastError")
-        next(new BadRequestError("The ID string is in an invalid format."));
+        return next(new BadRequestError("The ID string is in an invalid format."));
       next(err);
     });
 };
@@ -82,7 +82,7 @@ const findUserByCredentials = (email, password) =>
 const login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password)
-    next(new ValidationError("E-mail and password are required."));
+    return next(new ValidationError("E-mail and password are required."));
   return findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
@@ -105,9 +105,9 @@ const updateCurrentUser = (req, res, next) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError")
-        next(new NotFoundError("User ID not found."));
+        return next(new NotFoundError("User ID not found."));
       if (err.name === "ValidationError")
-        next(new ValidationError(err.message));
+        return next(new ValidationError(err.message));
       next(err);
     });
 };

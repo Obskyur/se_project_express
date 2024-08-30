@@ -24,7 +24,7 @@ const addItem = (req, res, next) => {
     .then((item) => res.status(201).send(item))
     .catch((err) => {
       if (err.name === "ValidationError")
-        next(
+        return next(
           new ValidationError("Item has invalid name, weather, or imageUrl."),
         );
       next(err);
@@ -38,7 +38,7 @@ const deleteItem = (req, res, next) => {
     .orFail()
     .then((item) => {
       if (!item.owner.equals(req.user._id)) {
-        next(
+        return next(
           new UnauthorizedError("User does not have ownership of this card."),
         );
       }
@@ -50,9 +50,9 @@ const deleteItem = (req, res, next) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError")
-        next(new NotFoundError("Item ID not found."));
+        return next(new NotFoundError("Item ID not found."));
       if (err.name === "CastError")
-        next(new BadRequestError("Invalid Item ID."));
+        return next(new BadRequestError("Invalid Item ID."));
       next(err);
     });
 };
@@ -69,9 +69,9 @@ const addLike = (req, res, next) => {
     .then((item) => res.status(200).send(item))
     .catch((err) => {
       if (err.name === "DocumentNotFoundError")
-        next(new NotFoundError("Item ID not found."));
+        return next(new NotFoundError("Item ID not found."));
       if (err.name === "CastError")
-        next(new BadRequestError("Invalid Item ID."));
+        return next(new BadRequestError("Invalid Item ID."));
       next(err);
     });
 };
@@ -89,9 +89,9 @@ const deleteLike = (req, res, next) => {
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError")
-        next(new NotFoundError("Item ID not found."));
+        return next(new NotFoundError("Item ID not found."));
       if (err.name === "CastError")
-        next(new BadRequestError("Invalid Item ID."));
+        return next(new BadRequestError("Invalid Item ID."));
       next(err);
     });
 };
