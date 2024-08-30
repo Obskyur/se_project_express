@@ -1,10 +1,10 @@
 //* Imports:
 const ClothingItem = require("../models/clothingItem");
 const {
-  ValidationError,
-  UnauthorizedError,
-  NotFoundError,
   BadRequestError,
+  NotFoundError,
+  UnauthorizedError,
+  ValidationError,
 } = require("../utils/errors");
 const errorHandler = require("../middlewares/error-handler");
 
@@ -39,9 +39,7 @@ const deleteItem = (req, res, next) => {
     .then((item) => {
       if (!item.owner.equals(req.user._id)) {
         next(
-          new UnauthorizedError(
-            "User does not have ownership of this card.",
-          ),
+          new UnauthorizedError("User does not have ownership of this card."),
         );
       }
       return ClothingItem.findByIdAndDelete(itemId)
@@ -60,7 +58,7 @@ const deleteItem = (req, res, next) => {
 };
 
 // Used to add a like to a card if the card is not already liked by this user
-const addLike = (req, res) => {
+const addLike = (req, res, next) => {
   const { itemId } = req.params;
   ClothingItem.findByIdAndUpdate(
     itemId,
@@ -79,7 +77,7 @@ const addLike = (req, res) => {
 };
 
 // Used to remove a like from a card if the user has it liked
-const deleteLike = (req, res) => {
+const deleteLike = (req, res, next) => {
   const { itemId } = req.params;
   ClothingItem.findByIdAndUpdate(
     itemId,

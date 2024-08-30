@@ -3,7 +3,7 @@ const router = require("express").Router();
 const clothingItemsRouter = require("./clothingItems");
 const userRouter = require("./users");
 const { addUser, login } = require("../controllers/users");
-const { PATH_NOT_FOUND_ERROR, NotFoundError } = require("../utils/errors");
+const { NotFoundError } = require("../utils/errors");
 const { validateLogin, validateUser } = require("../middlewares/validation");
 
 //* Re-routing:

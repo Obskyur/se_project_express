@@ -5,23 +5,24 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
 const {
-  MONGO_SERVER_ERROR,
-  NotFoundError,
   BadRequestError,
-  ValidationError,
-  UnauthorizedError,
   ConflictError,
+  NotFoundError,
+  UnauthorizedError,
+  ValidationError,
 } = require("../utils/errors");
+
+const MONGO_SERVER_ERROR = 11000;
 
 //* Methods (Controllers):
 
 // Used to add a new user to the database
-const addUser = (req, res) => {
+const addUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
 
   bcrypt.hash(password, 10).then((hash) =>
     User.create({
-      name: name,
+      name,
       avatar,
       email,
       password: hash,
@@ -71,7 +72,9 @@ const findUserByCredentials = (email, password) =>
       }
       return bcrypt.compare(password, user.password).then((match) => {
         if (!match)
-          return Promise.reject(new UnauthorizedError("Incorrect E-mail or Password."));
+          return Promise.reject(
+            new UnauthorizedError("Incorrect E-mail or Password."),
+          );
         return user;
       });
     });
@@ -90,7 +93,7 @@ const login = (req, res, next) => {
     .catch(next);
 };
 
-const updateCurrentUser = (req, res) => {
+const updateCurrentUser = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name: req.body.name, avatar: req.body.avatar },
