@@ -56,9 +56,9 @@ This server should be running live at <a href="https://www.wtwr.projectdev.net">
 <li> [x] <s>Enable request validation</s></li>
 <li> [x] <s>Handle request errors</s></li>
 <li> [x] <s>Server Authentication and Authorization</s> </li>
-<li> [ ] Implement RegEx queries?? </li>
-<li> [x] Configure Front-End Authorization </li>
-<li> [x] Connect Front-End to Server </li>
+<li> [x] <s>Implement RegEx queries??</s> </li>
+<li> [x] <s>Configure Front-End Authorization</s> </li>
+<li> [x] <s>Connect Front-End to Server</s> </li>
 </ul>
 
 
