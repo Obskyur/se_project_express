@@ -47,6 +47,18 @@ const validateUser = celebrate({
   }),
 });
 
+const validateUserUpdate = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30).messages({
+      "string.min": 'The minimum length of the "name" field is 2',
+      "string.max": 'The maximum length of the "name" field is 30',
+    }),
+    avatar: Joi.string().custom(validateUrl).messages({
+      "string.uri": "URL given is invalid.",
+    }),
+  }),
+});
+
 const validateLogin = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email().messages({
@@ -72,6 +84,7 @@ const validateId = celebrate({
 module.exports = {
   validateClothingItem,
   validateUser,
+  validateUserUpdate,
   validateLogin,
   validateId,
 };
