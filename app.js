@@ -19,11 +19,11 @@ connect("mongodb://127.0.0.1:27017/wtwr_db")
   .catch(console.error);
 
 //* Crash testing:
-/* app.get('/crash-test', () => {
+app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Server will crash now');
   }, 0);
-}); */
+});
 
 //* Begin listening for requests:
 app.use(cors());
