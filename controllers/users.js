@@ -41,8 +41,10 @@ const addUser = (req, res, next) => {
             new ValidationError("User has invalid name, email, or password."),
           );
         if (err.code === MONGO_SERVER_ERROR)
-          return next(new ConflictError("A user with this e-mail already exists!"));
-        next(err);
+          return next(
+            new ConflictError("A user with this e-mail already exists!"),
+          );
+        return next(err);
       }),
   );
 };
@@ -58,8 +60,10 @@ const getCurrentUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === "CastError")
-        return next(new BadRequestError("The ID string is in an invalid format."));
-      next(err);
+        return next(
+          new BadRequestError("The ID string is in an invalid format."),
+        );
+      return next(err);
     });
 };
 
@@ -108,7 +112,7 @@ const updateCurrentUser = (req, res, next) => {
         return next(new NotFoundError("User ID not found."));
       if (err.name === "ValidationError")
         return next(new ValidationError(err.message));
-      next(err);
+      return next(err);
     });
 };
 

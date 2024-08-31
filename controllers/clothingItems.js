@@ -2,8 +2,8 @@
 const ClothingItem = require("../models/clothingItem");
 const {
   BadRequestError,
+  ForbiddenError,
   NotFoundError,
-  UnauthorizedError,
   ValidationError,
 } = require("../utils/errors");
 const errorHandler = require("../middlewares/error-handler");
@@ -27,7 +27,7 @@ const addItem = (req, res, next) => {
         return next(
           new ValidationError("Item has invalid name, weather, or imageUrl."),
         );
-      next(err);
+      return next(err);
     });
 };
 
@@ -39,7 +39,7 @@ const deleteItem = (req, res, next) => {
     .then((item) => {
       if (!item.owner.equals(req.user._id)) {
         return next(
-          new UnauthorizedError("User does not have ownership of this card."),
+          new ForbiddenError("User does not have ownership of this card."),
         );
       }
       return ClothingItem.findByIdAndDelete(itemId)
@@ -53,7 +53,7 @@ const deleteItem = (req, res, next) => {
         return next(new NotFoundError("Item ID not found."));
       if (err.name === "CastError")
         return next(new BadRequestError("Invalid Item ID."));
-      next(err);
+      return next(err);
     });
 };
 
@@ -72,7 +72,7 @@ const addLike = (req, res, next) => {
         return next(new NotFoundError("Item ID not found."));
       if (err.name === "CastError")
         return next(new BadRequestError("Invalid Item ID."));
-      next(err);
+      return next(err);
     });
 };
 
@@ -92,7 +92,7 @@ const deleteLike = (req, res, next) => {
         return next(new NotFoundError("Item ID not found."));
       if (err.name === "CastError")
         return next(new BadRequestError("Invalid Item ID."));
-      next(err);
+      return next(err);
     });
 };
 
